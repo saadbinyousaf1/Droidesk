@@ -1,5 +1,5 @@
 <!-- // © https://saadbinyousaf.dev/ © // -->
-![Droidesk](.github/assets/banner.png)
+![Droidesk](.https://github.com/saadbinyousaf1/Droidesk/blob/main/core/app/banner.png)
 
 <p align="center">
   <a href="https://github.com/saadbinyousaf1/Droidesk/releases/latest"><img src="https://img.shields.io/github/v/release/saadbinyousaf1/Droidesk?label=Release&color=3DDC84&style=flat-square" alt="Latest release"></a>
