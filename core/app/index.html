@@ -1,0 +1,863 @@
+﻿<!doctype html>
+<!-- // © https://saadbinyousaf.dev/ © // -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Droidesk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2B2D30">
+<meta name="author" content="Saad bin Yousaf">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* // © https://saadbinyousaf.dev/ © // */
+:root{
+  --bg:#1E1F22; --panel:#2B2D30; --raise:#323438; --line:#393B40; --sep:#1E1F22;
+  --hover:#393B40; --sel:#2E436E; --sel2:#43454A;
+  --text:#DFE1E5; --text2:#A8ADB5; --muted:#6F737A;
+  --accent:#3574F0; --accent2:#4682FA; --focus:#3574F0;
+  --green:#5FB865; --red:#DB5C5C; --yellow:#F2C55C; --droid:#3DDC84;
+  --sans:'Inter','Segoe UI Variable Text','Segoe UI',sans-serif;
+  --mono:'JetBrains Mono','Cascadia Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:400 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;user-select:none}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+button:disabled{cursor:default;opacity:.4}
+:focus-visible{outline:2px solid var(--focus);outline-offset:1px;border-radius:4px}
+[hidden]{display:none!important}
+.ic{display:block;flex:none}
+.mono{font-family:var(--mono)}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.win{display:grid;grid-template-rows:40px 1fr auto 24px;height:100vh}
+.tb{display:flex;align-items:center;gap:6px;padding:0 10px 0 12px;background:var(--panel);border-bottom:1px solid var(--sep)}
+.tb .brand{display:flex;align-items:center;gap:9px;font-weight:600;padding-right:10px}
+.tb .proj{display:flex;align-items:center;gap:7px;height:28px;padding:0 10px;border-radius:6px;color:var(--text2)}
+.tb .proj:hover{background:var(--hover);color:var(--text)}
+.tb .grow{flex:1}
+.tbtn{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 10px;border-radius:6px;color:var(--text)}
+.tbtn:hover:not(:disabled){background:var(--hover)}
+.tbtn.icon{width:30px;padding:0;justify-content:center}
+.tbtn .ic.run{color:var(--green)}
+.tbtn .ic.stopc{color:var(--red)}
+.vsep{width:1px;height:20px;background:var(--line);margin:0 4px}
+.devsel{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:6px;max-width:240px}
+.devsel:hover{background:var(--hover)}
+.devsel span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:28px;padding:0 14px;border-radius:4px;border:1px solid #4E5157;background:transparent;font-weight:500;white-space:nowrap}
+.btn:hover:not(:disabled){background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover:not(:disabled){background:var(--accent2);border-color:var(--accent2)}
+.btn.danger{color:#F08080;border-color:#6E3B3D}
+.btn.danger:hover:not(:disabled){background:#3D2729}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.mid{display:grid;grid-template-columns:40px 1fr 320px;min-height:0;background:var(--sep);gap:1px}
+.stripe{background:var(--panel);display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+.sbtn{width:30px;height:30px;border-radius:6px;display:grid;place-items:center;color:var(--text2)}
+.sbtn:hover{background:var(--hover);color:var(--text)}
+.sbtn[aria-pressed="true"]{background:var(--sel);color:#fff}
+.stripe .gap{flex:1}
+.tw{background:var(--panel);display:flex;flex-direction:column;min-width:0;min-height:0}
+.twh{display:flex;align-items:center;gap:6px;height:36px;padding:0 8px 0 14px;border-bottom:1px solid var(--sep);flex:none}
+.twh h2{font-size:13px;font-weight:600}
+.twh .tabs{display:flex;gap:2px;margin-left:14px}
+.twh .tab{height:26px;padding:0 10px;border-radius:5px;color:var(--text2);font-size:12.5px;display:inline-flex;align-items:center}
+.twh .tab[aria-selected="true"]{background:var(--sel2);color:var(--text)}
+.twh .grow{flex:1}
+.twh .meta{color:var(--muted);font-size:12px;margin-right:6px}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.tablewrap{flex:1;overflow:auto;min-height:0}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead th{position:sticky;top:0;z-index:1;background:var(--panel);text-align:left;font-weight:500;color:var(--text2);font-size:12px;height:30px;padding:0 10px;border-bottom:1px solid var(--line)}
+thead th:first-child{padding-left:14px}
+tbody tr{height:44px;cursor:default}
+tbody tr:hover{background:#313337}
+tbody tr.sel{background:var(--sel)}
+tbody tr.sel td .sub{color:#B9C3D9}
+td{padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+td:first-child{padding-left:14px}
+.dname{display:flex;align-items:center;gap:10px;min-width:0}
+.dname .dic{flex:none;width:28px;height:28px;border-radius:6px;display:grid;place-items:center;background:#3A3D42;color:var(--text2)}
+.dname .dic.on{background:rgba(95,184,101,.18);color:var(--green)}
+.dname b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.dname .sub{display:block;font-size:11.5px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;font-size:11.5px;font-weight:500;background:#393B40;color:var(--text2)}
+.tag.root{background:rgba(242,197,92,.14);color:var(--yellow)}
+.tag.prev{background:rgba(53,116,240,.16);color:#8FB2FF}
+.status{display:inline-flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:#5A5D63;flex:none}
+.dot.on{background:var(--green)}
+.dot.booting{background:var(--yellow);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.35}}
+.racts{display:flex;justify-content:flex-end;gap:2px}
+.iconb{width:28px;height:28px;border-radius:5px;display:grid;place-items:center;color:var(--text2)}
+.iconb:hover:not(:disabled){background:var(--hover);color:var(--text)}
+.iconb.run{color:var(--green)}
+.iconb.stop{color:var(--red)}
+.empty{flex:1;display:grid;place-items:center;text-align:center;padding:40px}
+.empty h3{font-size:16px;font-weight:600}
+.empty p{color:var(--text2);margin:6px auto 18px;max-width:42ch}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.details{background:var(--panel);display:flex;flex-direction:column;min-height:0}
+.dbody{flex:1;overflow:auto;padding:16px 16px 18px}
+.dhead{display:flex;align-items:center;gap:12px}
+.dhead .big{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:#3A3D42;color:var(--text2)}
+.dhead .big.on{background:rgba(95,184,101,.18);color:var(--green)}
+.dhead h3{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dhead p{color:var(--text2);font-size:12px}
+.grp{margin-top:14px}
+.grp h4{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.grp h4::after{content:'';flex:1;height:1px;background:var(--line)}
+.kv{display:grid;grid-template-columns:110px 1fr;row-gap:6px;font-size:12.5px}
+.kv dt{color:var(--muted)}
+.kv dd{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kv dd.y{color:var(--yellow)}
+.dacts{display:grid;gap:6px;margin-top:6px}
+.dacts .btn{justify-content:flex-start;height:30px}
+.dacts .btn .ic{color:var(--text2)}
+.dacts .btn.primary .ic{color:#fff}
+.dacts .btn.danger .ic{color:#F08080}
+.dfoot{padding:10px 16px;border-top:1px solid var(--sep);display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+.dfoot button{color:var(--text2);font-size:11.5px}
+.dfoot button:hover{color:var(--text);text-decoration:underline}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.console{display:grid;grid-template-rows:36px 1fr;height:250px;background:var(--panel);border-top:1px solid var(--sep)}
+.console .twh{padding-left:12px}
+.cbody{display:grid;grid-template-columns:250px 1fr;min-height:0}
+.steps{list-style:none;padding:12px 14px;margin:0;border-right:1px solid var(--sep);overflow:auto;display:grid;gap:9px;align-content:start}
+.steps li{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted)}
+.steps .si{width:16px;height:16px;flex:none;display:grid;place-items:center}
+.steps li.done{color:var(--text2)}
+.steps li.done .si{color:var(--green)}
+.steps li.active{color:var(--text)}
+.steps li.fail{color:#F08080}
+.spin{width:13px;height:13px;border-radius:50%;border:2px solid #5A5D63;border-top-color:var(--accent);animation:spin .8s linear infinite;display:inline-block;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.log{overflow:auto;padding:10px 14px 14px;background:var(--bg);font:400 12px/1.6 var(--mono);color:#BCBEC4;white-space:pre-wrap;word-break:break-word;user-select:text}
+.log .h{color:#56A8F5;font-weight:700;margin-top:6px}
+.log .ok{color:var(--green);font-weight:700}
+.log .err{color:#F75464;font-weight:700}
+.log .warn{color:var(--yellow)}
+.log .dim{color:var(--muted)}
+.log .cur{display:inline-block;width:7px;height:14px;background:#BCBEC4;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.sb{display:flex;align-items:center;gap:14px;padding:0 10px 0 12px;background:var(--panel);border-top:1px solid var(--sep);font-size:12px;color:var(--text2)}
+.sb .msg{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb .prog{display:flex;align-items:center;gap:8px}
+.pbar{width:140px;height:4px;border-radius:2px;background:#43454A;overflow:hidden;position:relative}
+.pbar i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:2px;transition:width .4s}
+.pbar.ind i{width:35%;animation:ind 1.3s ease-in-out infinite}
+@keyframes ind{from{left:-35%}to{left:100%}}
+.sb button{color:var(--text2);font-size:12px}
+.sb button:hover{color:var(--text)}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.pop{position:fixed;z-index:30;min-width:220px;background:var(--panel);border:1px solid #43454A;border-radius:8px;padding:5px;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.pop button{display:flex;align-items:center;gap:10px;width:100%;height:30px;padding:0 10px;border-radius:5px;text-align:left}
+.pop button:hover:not(:disabled),.pop button:focus-visible{background:var(--sel);outline:none}
+.pop button .ic{color:var(--text2)}
+.pop button.danger{color:#F08080}
+.pop button.danger .ic{color:#F08080}
+.pop hr{border:0;height:1px;background:var(--line);margin:4px 6px}
+
+dialog{margin:auto;padding:0;border:1px solid #43454A;border-radius:10px;background:var(--panel);color:var(--text);box-shadow:0 24px 70px rgba(0,0,0,.6);max-height:90vh}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg{display:flex;flex-direction:column;max-height:90vh}
+.dlgh{display:flex;align-items:center;justify-content:space-between;height:42px;padding:0 10px 0 16px;border-bottom:1px solid var(--sep);flex:none}
+.dlgh h2{font-size:13px;font-weight:600}
+.dlgb{padding:16px;overflow:auto;min-height:0}
+.dlgf{display:flex;align-items:center;gap:8px;padding:12px 16px;border-top:1px solid var(--sep);flex:none}
+.dlgf .note{flex:1;color:var(--text2);font-size:12px}
+.lbl{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.input,.select{width:100%;height:28px;padding:0 9px;border-radius:4px;background:var(--panel);border:1px solid #4E5157;font-size:13px;color:var(--text)}
+.input:focus,.select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
+.select{appearance:none;padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23A8ADB5' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
+.select option{background:var(--panel)}
+.chk{display:flex;align-items:center;gap:9px;cursor:pointer}
+.chk input{width:15px;height:15px;accent-color:var(--accent)}
+.box{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg)}
+.box .bh{display:flex;align-items:center;justify-content:space-between;height:30px;padding:0 10px;background:var(--panel);border-bottom:1px solid var(--line);font-size:12px;color:var(--text2);font-weight:500}
+.lst{overflow:auto}
+.lst button{display:flex;align-items:center;gap:10px;width:100%;height:32px;padding:0 10px;text-align:left}
+.lst button:hover{background:#26282C}
+.lst button[aria-selected="true"]{background:var(--sel)}
+.lst .muted{color:var(--muted);margin-left:auto;font-size:12px}
+.imgt td{height:32px}
+.imgt tbody tr{height:32px;cursor:pointer}
+.imgt thead th{background:var(--panel)}
+.ok-t{color:var(--green)}
+.link{color:#6D9EFF}
+.link:hover{text-decoration:underline}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.cd{width:min(900px,95vw)}
+.cdgrid{display:grid;grid-template-columns:240px 1fr;gap:14px;height:min(330px,40vh)}
+.cdgrid .box{display:flex;flex-direction:column;min-height:0}
+.cdgrid .lst,.cdgrid .tablewrap{flex:1;min-height:0}
+.cdform{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-top:16px}
+.cdroot{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-top:16px;padding:12px;border:1px solid var(--line);border-radius:6px}
+.warnline{margin-top:10px;color:var(--yellow);font-size:12px}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.wiz{position:fixed;inset:0;z-index:40;background:var(--bg);display:grid;place-items:center}
+.wcard{width:min(820px,94vw);height:min(560px,92vh);display:grid;grid-template-rows:auto 1fr auto;background:var(--panel);border:1px solid #43454A;border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.whead{display:flex;align-items:center;gap:16px;padding:22px 26px;border-bottom:1px solid var(--sep);background:linear-gradient(90deg,rgba(61,220,132,.08),transparent 60%)}
+.whead h1{font-size:20px;font-weight:600}
+.whead p{color:var(--text2);margin-top:2px}
+.wbody{padding:22px 26px;overflow:auto;min-height:0;display:flex;flex-direction:column}
+.wbody h2{font-size:15px;font-weight:600}
+.wbody .lead{color:var(--text2);margin-top:6px;max-width:66ch}
+.wbody .lead.err{color:#F08080}
+.wbody .lead.warn{color:var(--yellow)}
+.comp{margin-top:16px}
+.comp td{height:30px}
+.comp tbody tr{height:30px}
+.comp tfoot td{height:32px;font-weight:600;border-top:1px solid var(--line)}
+.wprog{margin-top:16px;display:flex;align-items:center;gap:12px}
+.wprog .pbar{flex:1;width:auto;height:6px}
+.wprog small{color:var(--text2);font-size:12px;white-space:nowrap}
+.wlog{flex:1;margin-top:12px;border:1px solid var(--line);border-radius:6px;min-height:120px}
+.wfoot{display:flex;justify-content:flex-end;gap:8px;padding:14px 26px;border-top:1px solid var(--sep)}
+.wfoot .left{margin-right:auto;color:var(--muted);font-size:12px;align-self:center}
+
+/* // © https://saadbinyousaf.dev/ © // */
+.note-stack{position:fixed;right:14px;bottom:36px;z-index:60;display:grid;gap:8px;width:340px}
+.balloon{display:grid;grid-template-columns:18px 1fr;gap:10px;padding:12px 14px;border-radius:8px;background:#393B40;border:1px solid #4E5157;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:bin .25s ease}
+.balloon.err{border-color:#6E3B3D}
+.balloon b{font-weight:600}
+.balloon p{color:var(--text2);font-size:12.5px;margin-top:2px}
+.balloon .ic{margin-top:1px;color:#6D9EFF}
+.balloon.err .ic{color:#F08080}
+.balloon.ok .ic{color:var(--green)}
+@keyframes bin{from{opacity:0;transform:translateY(8px)}}
+.offline{position:fixed;inset:0;z-index:70;background:var(--bg);display:grid;place-items:center;text-align:center}
+.offline h2{font-size:18px;font-weight:600}
+.offline p{color:var(--text2);margin-top:6px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<!-- // © https://saadbinyousaf.dev/ © // -->
+<div class="win">
+  <header class="tb">
+    <div class="brand"><img src="/logo.svg" width="20" height="20" alt="">Droidesk</div>
+    <button class="proj" id="projBtn" title="Open the Droidesk folder"><svg class="ic" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5c0-.6.4-1 1-1h3l1.3 1.5H13c.6 0 1 .4 1 1V12c0 .6-.4 1-1 1H3c-.6 0-1-.4-1-1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span id="projPath"></span></button>
+    <div class="grow"></div>
+    <div class="devsel" id="devSel" title="Selected device"></div>
+    <button class="tbtn icon" id="tbRun" title="Start selected device" aria-label="Start selected device"></button>
+    <button class="tbtn icon" id="tbStop" title="Stop selected device" aria-label="Stop selected device"></button>
+    <div class="vsep"></div>
+    <button class="tbtn" id="tbUpdate" title="Update the emulator and adb"></button>
+    <button class="btn primary" id="tbCreate" style="margin-left:4px"></button>
+  </header>
+
+  <div class="mid">
+    <nav class="stripe" aria-label="Tool windows">
+      <button class="sbtn" id="stDevices" aria-pressed="true" title="Device Manager"></button>
+      <button class="sbtn" id="stConsole" aria-pressed="false" title="Console"></button>
+      <div class="gap"></div>
+      <button class="sbtn" id="stAbout" title="About Droidesk"></button>
+    </nav>
+
+    <section class="tw" aria-label="Device Manager">
+      <div class="twh">
+        <h2>Device Manager</h2>
+        <div class="tabs"><span class="tab" aria-selected="true">Virtual</span></div>
+        <div class="grow"></div>
+        <span class="meta" id="count"></span>
+        <button class="iconb" id="twAdd" title="Create device" aria-label="Create device"></button>
+      </div>
+      <div class="tablewrap" id="tableWrap"></div>
+    </section>
+
+    <aside class="details" aria-label="Device details">
+      <div class="twh"><h2>Details</h2></div>
+      <div class="dbody" id="details"></div>
+      <div class="dfoot"><span id="verTxt"></span><button id="madeBy">saadbinyousaf.dev</button></div>
+    </aside>
+  </div>
+
+  <section class="console" id="console" hidden aria-label="Console">
+    <div class="twh">
+      <h2>Console</h2>
+      <div class="tabs"><span class="tab" aria-selected="true" id="conTab">Tasks</span></div>
+      <div class="grow"></div>
+      <span id="conActs" style="display:flex;gap:6px"></span>
+      <button class="iconb" id="conHide" title="Hide" aria-label="Hide console"></button>
+    </div>
+    <div class="cbody">
+      <ol class="steps" id="conSteps"></ol>
+      <div class="log" id="conLog"></div>
+    </div>
+  </section>
+
+  <footer class="sb">
+    <span class="msg" id="sbMsg">Ready</span>
+    <span class="prog" id="sbProg" hidden><span id="sbProgTxt"></span><span class="pbar" id="sbBar"><i></i></span><button id="sbCancel">Cancel</button></span>
+    <span id="sbVer"></span>
+  </footer>
+</div>
+
+<!-- // © https://saadbinyousaf.dev/ © // -->
+<div class="pop" id="rowMenu" role="menu" hidden></div>
+
+<dialog id="createDlg" class="cd" aria-labelledby="cdTitle">
+  <div class="dlg">
+    <div class="dlgh"><h2 id="cdTitle">Create Virtual Device</h2><button class="iconb" data-close aria-label="Close"></button></div>
+    <div class="dlgb">
+      <div class="cdgrid">
+        <div class="box"><div class="bh">Device definition</div><div class="lst" id="cdModels" role="listbox" aria-label="Device definition"></div></div>
+        <div class="box">
+          <div class="bh"><span>System image</span><span><button class="link" id="cdRefresh">Check for new versions</button><span id="cdRefreshSt" style="margin-left:8px;color:var(--muted)"></span></span></div>
+          <div class="tablewrap"><table class="imgt"><thead><tr><th style="width:34%">Release</th><th style="width:16%">API</th><th style="width:30%">Services</th><th>Status</th></tr></thead><tbody id="cdImages"></tbody></table></div>
+        </div>
+      </div>
+      <div class="cdform">
+        <div><label class="lbl" for="cdName">Name</label><input class="input" id="cdName" spellcheck="false" autocomplete="off"></div>
+        <div><label class="lbl" for="cdRam">Memory</label><select class="select" id="cdRam"><option value="2048">2 GB</option><option value="3072">3 GB</option><option value="4096" selected>4 GB</option><option value="6144">6 GB</option><option value="8192">8 GB</option></select></div>
+        <div><label class="lbl" for="cdSto">Internal storage</label><select class="select" id="cdSto"><option value="8">8 GB</option><option value="16" selected>16 GB</option><option value="32">32 GB</option><option value="64">64 GB</option></select></div>
+      </div>
+      <div class="cdroot">
+        <label class="chk"><input type="checkbox" id="cdRoot" checked>Root with Magisk</label>
+        <select class="select" id="cdMagisk" aria-label="Magisk version"><option>Loading Magisk versions...</option></select>
+      </div>
+      <p class="warnline" id="cdWarn" hidden></p>
+    </div>
+    <div class="dlgf"><span class="note" id="cdNote"></span><button class="btn" data-close>Cancel</button><button class="btn primary" id="cdFinish">Finish</button></div>
+  </div>
+</dialog>
+
+<dialog id="rootDlg" style="width:min(520px,94vw)" aria-labelledby="rdTitle">
+  <div class="dlg">
+    <div class="dlgh"><h2 id="rdTitle">Root with Magisk</h2><button class="iconb" data-close aria-label="Close"></button></div>
+    <div class="dlgb">
+      <p id="rdSub" style="color:var(--text2);margin-bottom:12px"></p>
+      <div class="box"><div class="tablewrap" style="max-height:280px"><table class="imgt"><thead><tr><th>Magisk version</th><th>Channel</th><th>Released</th></tr></thead><tbody id="rdList"></tbody></table></div></div>
+    </div>
+    <div class="dlgf"><span class="note">Runs in the background. Progress shows in the console.</span><button class="btn" data-close>Cancel</button><button class="btn primary" id="rdGo">Root</button></div>
+  </div>
+</dialog>
+
+<dialog id="askDlg" style="width:min(440px,94vw)" aria-labelledby="akTitle">
+  <div class="dlg">
+    <div class="dlgb" style="display:grid;grid-template-columns:32px 1fr;gap:14px;padding:20px 20px 8px">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#F2C55C"/><path d="M16 9v9" stroke="#1E1F22" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="23" r="1.9" fill="#1E1F22"/></svg>
+      <div><h2 id="akTitle" style="font-size:14px;font-weight:600"></h2><p id="akText" style="color:var(--text2);margin-top:6px"></p></div>
+    </div>
+    <div class="dlgf" style="border:0;justify-content:flex-end"><button class="btn" id="akNo">Cancel</button><button class="btn primary" id="akYes"></button></div>
+  </div>
+</dialog>
+
+<div class="wiz" id="wiz" hidden>
+  <div class="wcard">
+    <div class="whead"><img src="/logo.svg" width="44" height="44" alt=""><div><h1>Droidesk Setup Wizard</h1><p id="wSub">Rooted Android emulators without Android Studio</p></div></div>
+    <div class="wbody" id="wBody"></div>
+    <div class="wfoot" id="wFoot"></div>
+  </div>
+</div>
+
+<div class="note-stack" id="notes" aria-live="polite"></div>
+<div class="offline" id="offline" hidden><div><h2>Droidesk stopped</h2><p>Close this window and open Droidesk again from your desktop.</p></div></div>
+
+<script>
+// © https://saadbinyousaf.dev/ © //
+const TOKEN = location.hash.slice(1);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let S = { avds: [], task: null, ready: true, setup: { done: true, reboot: false } };
+let sel = null, busy = false, fails = 0, sigs = {};
+try { sel = localStorage.getItem('dsk.sel'); } catch (e) {}
+
+// © https://saadbinyousaf.dev/ © //
+const ICONS = {
+  run: '<path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/>',
+  stop: '<rect x="3.5" y="3.5" width="9" height="9" rx="1.5" fill="currentColor"/>',
+  plus: '<path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  more: '<circle cx="8" cy="3.5" r="1.3" fill="currentColor"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="8" cy="12.5" r="1.3" fill="currentColor"/>',
+  phone: '<rect x="4.5" y="1.5" width="7" height="13" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 12.4h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  tablet: '<rect x="2" y="2.5" width="12" height="11" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 11.4h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  cold: '<path d="M8 1.5v13M2.4 4.75l11.2 6.5M2.4 11.25l11.2-6.5M6.3 2.6 8 4.2l1.7-1.6M6.3 13.4 8 11.8l1.7 1.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>',
+  root: '<path d="M8 1.6l5 2v4c0 3-2.2 5.3-5 6.5C5.2 13 3 10.6 3 7.6v-4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5 2.8-2.9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  folder: '<path d="M2 4.5c0-.6.4-1 1-1h3l1.3 1.5H13c.6 0 1 .4 1 1V12c0 .6-.4 1-1 1H3c-.6 0-1-.4-1-1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
+  trash: '<path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5M7 7v4M9 7v4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  update: '<path d="M13 8a5 5 0 1 1-1.5-3.6M13 2.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+  console: '<rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 6.5l2 1.6-2 1.6M8 10.2h3.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  info: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.2v4M8 4.8v.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  close: '<path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+  hide: '<path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  check: '<path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+  x: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.8 5.8l4.4 4.4M10.2 5.8l-4.4 4.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  bell: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.2v4M8 4.8v.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+};
+const ic = (n, s = 16, cls = '') => `<svg class="ic ${cls}" width="${s}" height="${s}" viewBox="0 0 16 16" aria-hidden="true">${ICONS[n]}</svg>`;
+const gb = mb => mb ? (mb / 1024).toFixed(mb % 1024 ? 1 : 0) + ' GB' : 'Default';
+const cur = () => S.avds.find(a => a.name === sel);
+const taskRunning = () => S.task && S.task.state === 'running';
+const isTablet = a => /tablet|fold/i.test(a.deviceId || a.device || '');
+const stateTxt = a => a.stopping ? 'Shutting down' : a.state === 'on' ? 'Running' : a.state === 'booting' ? 'Starting' : 'Off';
+const once = (k, v) => { const j = JSON.stringify(v); if (sigs[k] === j) return false; sigs[k] = j; return true; };
+
+// © https://saadbinyousaf.dev/ © //
+async function api(path, body) {
+  const r = await fetch(path, { method: body ? 'POST' : 'GET', headers: { 'X-Vault': TOKEN, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Request failed');
+  return j;
+}
+function note(title, text, kind) {
+  const el = document.createElement('div');
+  el.className = 'balloon ' + (kind || '');
+  el.innerHTML = `${ic(kind === 'err' ? 'x' : kind === 'ok' ? 'check' : 'bell')}<div><b>${esc(title)}</b>${text ? `<p>${esc(text)}</p>` : ''}</div>`;
+  $('#notes').appendChild(el);
+  setTimeout(() => el.remove(), kind === 'err' ? 6500 : 3500);
+}
+async function act(fn, okTitle) {
+  busy = true; sigs = {}; render();
+  try { await fn(); if (okTitle) note(okTitle); } catch (e) { note('Something went wrong', e.message, 'err'); }
+  busy = false; sigs = {}; refreshSoon();
+}
+function refreshSoon() { setTimeout(async () => { try { S = await api('/api/state'); render(); } catch (e) {} }, 300); }
+
+// © https://saadbinyousaf.dev/ © //
+async function poll() {
+  try {
+    S = await api('/api/state'); fails = 0;
+    if (!S.avds.some(a => a.name === sel)) sel = S.avds[0]?.name || null;
+    render();
+  } catch (e) { if (++fails > 3) $('#offline').hidden = false; }
+  finally { setTimeout(poll, taskRunning() ? 900 : 2000); }
+}
+function render() { renderChrome(); renderTable(); renderDetails(); renderConsole(); renderStatus(); renderWizard(); watchFinish(); }
+
+// © https://saadbinyousaf.dev/ © //
+function renderChrome() {
+  const a = cur(), t = taskRunning();
+  if (!once('chrome', [a && [a.name, a.state, a.stopping], t, busy, S.root, S.version])) return;
+  $('#projPath').textContent = S.root || '';
+  $('#devSel').innerHTML = a ? `${ic(isTablet(a) ? 'tablet' : 'phone', 15)}<span>${esc(a.name)}</span>` : '<span style="color:var(--muted)">No device</span>';
+  $('#tbRun').innerHTML = ic('run', 16, 'run'); $('#tbRun').disabled = !a || a.state !== 'off' || t || busy;
+  $('#tbStop').innerHTML = ic('stop', 15, 'stopc'); $('#tbStop').disabled = !a || a.state !== 'on' || a.stopping || busy;
+  $('#tbUpdate').innerHTML = `${ic('update', 15)}Update emulator`; $('#tbUpdate').disabled = t;
+  $('#tbCreate').innerHTML = `${ic('plus', 14)}Create device`; $('#tbCreate').disabled = t;
+  $('#twAdd').innerHTML = ic('plus', 15); $('#twAdd').disabled = t;
+  $('#stDevices').innerHTML = ic('phone', 17); $('#stConsole').innerHTML = ic('console', 17); $('#stAbout').innerHTML = ic('info', 17);
+  $('#conHide').innerHTML = ic('hide', 15);
+  $('#verTxt').textContent = `Droidesk ${S.version || ''}`;
+  $('#sbVer').textContent = `Droidesk ${S.version || ''}`;
+}
+$('#tbRun').onclick = () => start(false);
+$('#tbStop').onclick = () => stop();
+$('#tbUpdate').onclick = updateEmu;
+$('#tbCreate').onclick = () => openCreate();
+$('#twAdd').onclick = () => openCreate();
+$('#projBtn').onclick = () => api('/api/openroot', {}).catch(() => {});
+$('#madeBy').onclick = () => api('/api/open', { url: S.site }).catch(() => {});
+$('#stAbout').onclick = () => api('/api/open', { url: S.repo }).catch(() => {});
+$('#stConsole').onclick = () => toggleConsole();
+$('#conHide').onclick = () => toggleConsole(false);
+let consoleOpen = false;
+function toggleConsole(v) { consoleOpen = v === undefined ? !consoleOpen : v; sigs.console = ''; renderConsole(); }
+
+// © https://saadbinyousaf.dev/ © //
+function renderTable() {
+  const t = taskRunning();
+  if (!once('table', [S.avds, sel, t, busy])) return;
+  const on = S.avds.filter(a => a.state !== 'off').length;
+  $('#count').textContent = S.avds.length ? `${S.avds.length} ${S.avds.length === 1 ? 'device' : 'devices'}${on ? `, ${on} running` : ''}` : '';
+  const wrap = $('#tableWrap');
+  if (!S.avds.length) {
+    wrap.innerHTML = `<div class="empty"><div>${ic('phone', 40)}<h3 style="margin-top:12px">No virtual devices yet</h3><p>Create a device with any Android version. Droidesk downloads what it needs and can root it in the same step.</p><button class="btn primary" data-a="create">${ic('plus', 14)}Create device</button></div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<table><thead><tr><th style="width:34%">Name</th><th style="width:9%">API</th><th style="width:21%">Type</th><th style="width:14%">Root</th><th style="width:12%">Status</th><th style="width:10%"></th></tr></thead><tbody>
+    ${S.avds.map(a => `<tr class="${a.name === sel ? 'sel' : ''}" data-name="${esc(a.name)}" tabindex="0" aria-selected="${a.name === sel}">
+      <td><div class="dname"><span class="dic ${a.state === 'on' ? 'on' : ''}">${ic(isTablet(a) ? 'tablet' : 'phone', 16)}</span><span style="min-width:0"><b>${esc(a.name)}</b><span class="sub">${esc(a.device)}, Android ${esc(a.android)}</span></span></div></td>
+      <td class="mono" title="${esc(a.key)}">${/^\d/.test(a.key) ? esc(a.key) : '<span class="tag prev">Preview</span>'}</td>
+      <td>${esc(a.image)}</td>
+      <td>${a.rooted ? `<span class="tag root">Magisk${a.magisk ? ' ' + esc(a.magisk) : ''}</span>` : '<span style="color:var(--muted)">None</span>'}</td>
+      <td><span class="status"><span class="dot ${a.state}"></span>${stateTxt(a)}</span></td>
+      <td><div class="racts">
+        ${a.state === 'off' ? `<button class="iconb run" data-r="start" ${t || busy ? 'disabled' : ''} title="Start" aria-label="Start ${esc(a.name)}">${ic('run', 15)}</button>`
+          : `<button class="iconb stop" data-r="stop" ${a.state !== 'on' || a.stopping || busy ? 'disabled' : ''} title="Stop" aria-label="Stop ${esc(a.name)}">${ic('stop', 14)}</button>`}
+        <button class="iconb" data-r="menu" title="More actions" aria-label="More actions for ${esc(a.name)}" aria-haspopup="menu">${ic('more', 15)}</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+function selectName(n) { sel = n; try { localStorage.setItem('dsk.sel', n); } catch (e) {} sigs = {}; render(); }
+$('#tableWrap').addEventListener('click', e => {
+  if (e.target.closest('[data-a="create"]')) return openCreate();
+  const tr = e.target.closest('tr[data-name]'); if (!tr) return;
+  const r = e.target.closest('[data-r]');
+  const rect = r ? r.getBoundingClientRect() : null;
+  if (tr.dataset.name !== sel) selectName(tr.dataset.name);
+  if (!r || r.disabled) return;
+  if (r.dataset.r === 'start') start(false);
+  if (r.dataset.r === 'stop') stop();
+  if (r.dataset.r === 'menu') openMenu(rect);
+});
+$('#tableWrap').addEventListener('dblclick', e => {
+  const tr = e.target.closest('tr[data-name]'); if (!tr || e.target.closest('[data-r]')) return;
+  const a = S.avds.find(x => x.name === tr.dataset.name); if (a && a.state === 'off' && !taskRunning()) { selectName(a.name); start(false); }
+});
+$('#tableWrap').addEventListener('keydown', e => {
+  const tr = e.target.closest('tr[data-name]'); if (!tr) return;
+  if (e.key === 'Enter') { e.preventDefault(); selectName(tr.dataset.name); }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const i = S.avds.findIndex(a => a.name === tr.dataset.name), n = S.avds[i + (e.key === 'ArrowDown' ? 1 : -1)];
+    if (n) { selectName(n.name); setTimeout(() => { const el = document.querySelector(`tr[data-name="${CSS.escape(n.name)}"]`); if (el) el.focus(); }, 20); }
+  }
+});
+document.addEventListener('contextmenu', e => {
+  const tr = e.target.closest('tr[data-name]'); if (!tr) return;
+  e.preventDefault(); if (tr.dataset.name !== sel) selectName(tr.dataset.name);
+  openMenu(null, e.clientX, e.clientY);
+});
+
+// © https://saadbinyousaf.dev/ © //
+function menuItems(a) {
+  const t = taskRunning(), off = a.state === 'off';
+  return `
+    <button role="menuitem" data-m="start" ${!off || t || busy ? 'disabled' : ''}>${ic('run', 15)}Start</button>
+    <button role="menuitem" data-m="cold" ${!off || t || busy ? 'disabled' : ''}>${ic('cold', 15)}Cold Boot Now</button>
+    <button role="menuitem" data-m="stop" ${a.state !== 'on' || busy ? 'disabled' : ''}>${ic('stop', 14)}Stop</button>
+    <hr>
+    <button role="menuitem" data-m="root" ${!off || t || busy ? 'disabled' : ''}>${ic('root', 15)}${a.rooted ? 'Re-root with Magisk...' : 'Root with Magisk...'}</button>
+    <button role="menuitem" data-m="folder">${ic('folder', 15)}Show on Disk</button>
+    <hr>
+    <button role="menuitem" data-m="delete" class="danger" ${!off || t ? 'disabled' : ''}>${ic('trash', 15)}Delete</button>`;
+}
+function openMenu(anchor, x, y) {
+  const a = cur(); if (!a) return;
+  const m = $('#rowMenu'); m.innerHTML = menuItems(a); m.hidden = false;
+  const r = anchor || { left: x, right: x, bottom: y, top: y };
+  const w = m.offsetWidth, h = m.offsetHeight;
+  let left = anchor ? r.right - w : x, top = r.bottom + 4;
+  if (top + h > innerHeight - 8) top = (anchor ? r.top : y) - h - 4;
+  m.style.left = Math.max(8, Math.min(left, innerWidth - w - 8)) + 'px'; m.style.top = Math.max(8, top) + 'px';
+  const f = m.querySelector('button:not(:disabled)'); if (f) f.focus();
+}
+function closeMenu() { $('#rowMenu').hidden = true; }
+$('#rowMenu').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b || b.disabled) return; closeMenu(); doAction(b.dataset.m); });
+$('#rowMenu').addEventListener('keydown', e => {
+  const items = [...$('#rowMenu').querySelectorAll('button:not(:disabled)')], i = items.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown') { e.preventDefault(); (items[i + 1] || items[0]).focus(); }
+  if (e.key === 'ArrowUp') { e.preventDefault(); (items[i - 1] || items[items.length - 1]).focus(); }
+});
+document.addEventListener('mousedown', e => { if (!$('#rowMenu').hidden && !e.target.closest('#rowMenu') && !e.target.closest('[data-r="menu"]')) closeMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+function doAction(k) {
+  ({ start: () => start(false), cold: () => start(true), stop, root: openRoot, folder, delete: openDelete })[k]();
+}
+
+// © https://saadbinyousaf.dev/ © //
+function renderDetails() {
+  const a = cur(), t = taskRunning();
+  if (!once('details', [a, t, busy])) return;
+  const el = $('#details');
+  if (!a) { el.innerHTML = `<p style="color:var(--muted)">Select a device to see its details.</p>`; return; }
+  const off = a.state === 'off';
+  el.innerHTML = `
+    <div class="dhead"><span class="big ${a.state === 'on' ? 'on' : ''}">${ic(isTablet(a) ? 'tablet' : 'phone', 22)}</span>
+      <div style="min-width:0"><h3>${esc(a.name)}</h3><p><span class="status"><span class="dot ${a.state}"></span>${stateTxt(a)}</span></p></div></div>
+    <div class="grp"><h4>Properties</h4><dl class="kv">
+      <dt>Device</dt><dd>${esc(a.device)}</dd>
+      <dt>Android</dt><dd>Android ${esc(a.android)}${a.preview ? ' preview' : ''}</dd>
+      <dt>API level</dt><dd class="mono">${esc(a.key)}</dd>
+      <dt>System image</dt><dd>${esc(a.image)}</dd>
+      <dt>ABI</dt><dd class="mono">x86_64</dd>
+      <dt>Memory</dt><dd>${gb(a.ramMb)}</dd>
+      <dt>Storage</dt><dd>${a.storageGb ? a.storageGb + ' GB' : 'Default'}</dd>
+      <dt>Root</dt><dd class="${a.rooted ? 'y' : ''}">${a.rooted ? 'Magisk' + (a.magisk ? ' ' + esc(a.magisk) : '') : 'Not rooted'}</dd>
+    </dl></div>
+    <div class="grp"><h4>Actions</h4><div class="dacts">
+      ${off ? `<button class="btn primary" data-d="start" ${t || busy ? 'disabled' : ''}>${ic('run', 14)}Start</button>
+               <button class="btn" data-d="cold" ${t || busy ? 'disabled' : ''}>${ic('cold', 14)}Cold Boot Now</button>`
+            : `<button class="btn" data-d="stop" ${a.state !== 'on' || a.stopping || busy ? 'disabled' : ''}>${ic('stop', 13)}${a.stopping ? 'Shutting down...' : 'Stop'}</button>`}
+      <button class="btn" data-d="root" ${!off || t || busy ? 'disabled' : ''}>${ic('root', 14)}${a.rooted ? 'Re-root with Magisk...' : 'Root with Magisk...'}</button>
+      <button class="btn" data-d="folder">${ic('folder', 14)}Show on Disk</button>
+      <button class="btn danger" data-d="delete" ${!off || t ? 'disabled' : ''} style="margin-top:8px">${ic('trash', 14)}Delete</button>
+    </div></div>`;
+}
+$('#details').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b && !b.disabled) doAction(b.dataset.d); });
+
+const start = cold => { const a = cur(); if (a) act(() => api('/api/start', { name: a.name, cold }), `${cold ? 'Cold booting' : 'Starting'} ${a.name}`); };
+const stop = () => { const a = cur(); if (a) act(() => api('/api/stop', { name: a.name }), `Stopping ${a.name}`); };
+const folder = () => { const a = cur(); if (a) act(() => api('/api/folder', { name: a.name })); };
+function updateEmu() {
+  if (taskRunning()) return note('Busy', 'Wait for the current task to finish.', 'err');
+  if (S.avds.some(a => a.state !== 'off')) return note('Stop your devices first', 'The emulator can only update while every device is off.', 'err');
+  consoleOpen = true;
+  act(() => api('/api/update', {}), 'Updating the emulator');
+}
+
+// © https://saadbinyousaf.dev/ © //
+function lineCls(l) {
+  if (/^==>/.test(l)) return 'h';
+  if (/^OK\s/.test(l)) return 'ok';
+  if (/^ERROR\s/.test(l)) return 'err';
+  if (/^\s*!|\[!\]|warning/i.test(l)) return 'warn';
+  if (/^(droidesk|folder)\s/.test(l)) return 'dim';
+  return '';
+}
+function fillLog(el, lines, running) {
+  const near = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+  el.innerHTML = (lines || []).map(l => `<div class="${lineCls(l)}">${esc(l)}</div>`).join('') + (running ? '<div><span class="cur"></span></div>' : '');
+  if (near) el.scrollTop = el.scrollHeight;
+}
+function stepsHtml(t) {
+  return (t.steps || []).map((s, i) => {
+    let c = '', mk = `<span style="width:7px;height:7px;border-radius:50%;background:#4E5157;display:block"></span>`;
+    if (t.state === 'done' || i < t.current) { c = 'done'; mk = ic('check', 15); }
+    else if (i === t.current) { c = t.state === 'failed' ? 'fail' : 'active'; mk = c === 'fail' ? ic('x', 15) : '<span class="spin"></span>'; }
+    return `<li class="${c}"><span class="si">${mk}</span>${esc(s)}</li>`;
+  }).join('');
+}
+const dlText = t => t && t.dl ? `${t.dl.label}  ${(t.dl.bytes / 1048576).toFixed(1)} MB` : '';
+let prevTaskState = null;
+function renderConsole() {
+  const t = S.task && S.task.action !== 'Setup' ? S.task : null;
+  if (t && t.state === 'running' && prevTaskState !== 'running') consoleOpen = true;
+  if (t && t.state === 'failed' && prevTaskState === 'running') consoleOpen = true;
+  prevTaskState = t ? t.state : null;
+  $('#console').hidden = !consoleOpen;
+  $('#stConsole').setAttribute('aria-pressed', consoleOpen);
+  if (!consoleOpen) return;
+  if (once('console', [t && [t.label, t.state, t.current, t.steps, t.message]])) {
+    $('#conTab').textContent = t ? t.label : 'Tasks';
+    $('#conSteps').innerHTML = t ? stepsHtml(t) : '<li>No task running</li>';
+    $('#conActs').innerHTML = !t ? '' : t.state === 'running' ? '<button class="btn" data-c="cancel">Cancel</button>'
+      : t.state === 'failed' ? '<button class="btn primary" data-c="retry">Retry</button><button class="btn" data-c="clear">Clear</button>'
+      : '<button class="btn" data-c="clear">Clear</button>';
+  }
+  fillLog($('#conLog'), t ? t.log : ['Creating, rooting and updating show their live log here.'], t && t.state === 'running');
+}
+$('#conActs').addEventListener('click', async e => {
+  const b = e.target.closest('[data-c]'); if (!b) return;
+  try {
+    if (b.dataset.c === 'cancel') { await api('/api/cancel', {}); note('Cancelled'); }
+    if (b.dataset.c === 'retry') { await api('/api/retry', {}); }
+    if (b.dataset.c === 'clear') { await api('/api/dismiss', {}); S.task = null; }
+  } catch (x) { note('Something went wrong', x.message, 'err'); }
+  sigs = {}; refreshSoon();
+});
+
+function renderStatus() {
+  const t = S.task;
+  const run = t && t.state === 'running';
+  const n = t && t.steps ? t.steps.length : 0;
+  $('#sbProg').hidden = !run || t.action === 'Setup';
+  if (run) {
+    $('#sbProgTxt').textContent = dlText(t) || (t.steps && t.steps[t.current]) || '';
+    const bar = $('#sbBar');
+    if (t.dl) { bar.className = 'pbar ind'; bar.firstElementChild.style.width = ''; }
+    else { bar.className = 'pbar'; bar.firstElementChild.style.width = n ? Math.max(6, Math.round(t.current / n * 100)) + '%' : '30%'; }
+  }
+  $('#sbMsg').textContent = !t ? (S.avds.some(a => a.state === 'on') ? `${S.avds.filter(a => a.state === 'on').map(a => a.name).join(', ')} running` : 'Ready')
+    : run ? `${t.label}${t.message ? ': ' + t.message : ''}` : t.state === 'failed' ? `${t.label} stopped: ${t.message}` : `${t.label} finished`;
+}
+$('#sbCancel').onclick = async () => { try { await api('/api/cancel', {}); note('Cancelled'); } catch (x) { note('Something went wrong', x.message, 'err'); } refreshSoon(); };
+
+let finPrev = null;
+function watchFinish() {
+  const t = S.task;
+  if (finPrev === 'running' && t && t.state === 'done') {
+    const m = { Create: `${t.name} created`, Root: `${t.name} rooted`, Update: 'Emulator updated', Setup: 'Setup complete' }[t.action];
+    if (m) note(m, t.message, 'ok');
+  }
+  if (finPrev === 'running' && t && t.state === 'failed') note(`${t.label} stopped`, t.message, 'err');
+  finPrev = t ? t.state : null;
+}
+
+// © https://saadbinyousaf.dev/ © //
+let V = [], D = [], M = [], cd = { key: null, tag: null, model: null, autoName: '' };
+async function loadMagisk(refresh) { try { M = (await api('/api/magisk' + (refresh ? '?refresh=1' : ''))).items || []; } catch (e) { M = []; } return M; }
+const defaultMagisk = () => M.find(m => m.channel === 'Stable') || M[0];
+const flatImages = () => V.flatMap(v => v.tags.map(t => ({ key: v.key, tag: t.id, android: v.android, preview: v.preview, label: t.label, got: (v.installed || []).includes(t.id) })));
+
+async function openCreate() {
+  if (taskRunning()) return note('Busy', 'Wait for the current task to finish.', 'err');
+  cd.autoName = ''; $('#cdName').value = ''; $('#cdRefreshSt').textContent = '';
+  $('#cdModels').innerHTML = '<div style="padding:12px;color:var(--muted)">Loading...</div>';
+  $('#cdImages').innerHTML = '';
+  $('#createDlg').showModal();
+  const [v, d] = await Promise.all([api('/api/versions').catch(() => ({ items: [] })), api('/api/devices').catch(() => ({ items: [] }))]);
+  V = v.items || []; D = d.items || [];
+  const imgs = flatImages();
+  if (!imgs.find(i => i.key === cd.key && i.tag === cd.tag)) { const p = imgs.find(i => i.key === '35' && i.tag === 'google_apis_playstore') || imgs.find(i => !i.preview) || imgs[0]; if (p) { cd.key = p.key; cd.tag = p.tag; } }
+  if (!D.find(x => x.id === cd.model)) cd.model = (D.find(x => x.id === 'pixel_8') || D.find(x => x.id === 'pixel_7') || D[0] || {}).id;
+  drawCreate();
+  if (!M.length) await loadMagisk();
+  drawMagiskSel();
+}
+function drawCreate() {
+  $('#cdModels').innerHTML = D.map(x => `<button role="option" data-m="${esc(x.id)}" aria-selected="${x.id === cd.model}">${ic(/tablet|fold/i.test(x.id) ? 'tablet' : 'phone', 15)}${esc(x.name)}</button>`).join('');
+  $('#cdImages').innerHTML = flatImages().map(i => `<tr class="${i.key === cd.key && i.tag === cd.tag ? 'sel' : ''}" data-k="${esc(i.key)}" data-t="${esc(i.tag)}" tabindex="0">
+      <td>Android ${esc(i.android)}${i.preview ? ' <span class="tag prev">Preview</span>' : ''}</td><td class="mono" title="${esc(i.key)}">${/^\d/.test(i.key) ? esc(i.key) : esc(i.key.slice(0, 8))}</td><td>${esc(i.label)}</td>
+      <td>${i.got ? '<span class="ok-t">Downloaded</span>' : '<span style="color:var(--muted)">Not downloaded</span>'}</td></tr>`).join('')
+    || '<tr><td colspan="4" style="color:var(--muted)">No system images found.</td></tr>';
+  const s = $('#cdModels [aria-selected="true"]'); if (s) s.scrollIntoView({ block: 'nearest' });
+  const r = $('#cdImages tr.sel'); if (r) r.scrollIntoView({ block: 'nearest' });
+  autoName(); drawCreateNote();
+}
+function drawCreateNote() {
+  const i = flatImages().find(x => x.key === cd.key && x.tag === cd.tag);
+  $('#cdNote').textContent = i ? (i.got ? `Android ${i.android} is already downloaded.` : `Android ${i.android} (${i.label}) will be downloaded first, about 1 to 1.5 GB.`) : '';
+  const root = $('#cdRoot').checked;
+  $('#cdMagisk').disabled = !root;
+  const warn = root && i && (i.preview || /ps16k/.test(i.tag));
+  $('#cdWarn').hidden = !warn;
+  $('#cdWarn').textContent = warn ? 'Preview and 16 KB page images are new, and rootAVD may not support them yet. If patching fails the device still works, without root.' : '';
+}
+function autoName() {
+  const inp = $('#cdName'), i = flatImages().find(x => x.key === cd.key && x.tag === cd.tag), m = D.find(x => x.id === cd.model);
+  if (!i || !m || (inp.value && inp.value !== cd.autoName)) return;
+  let base = `${m.name.replace(/\s+/g, '')}-A${String(i.android).replace(/\s+/g, '').replace(/^API/, '')}`, n = base, k = 2;
+  while (S.avds.some(a => a.name.toLowerCase() === n.toLowerCase())) n = `${base}-${k++}`;
+  cd.autoName = n; inp.value = n;
+}
+function drawMagiskSel() {
+  const s = $('#cdMagisk');
+  if (!M.length) { s.innerHTML = '<option value="">rootAVD picks a version (GitHub unreachable)</option>'; return; }
+  const d = defaultMagisk();
+  s.innerHTML = M.map((m, i) => `<option value="${i}" ${m === d ? 'selected' : ''}>Magisk ${esc(m.version)} (${esc(m.channel)})${m === d ? ', recommended' : ''}</option>`).join('');
+}
+$('#cdModels').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) { cd.model = b.dataset.m; drawCreate(); } });
+$('#cdImages').addEventListener('click', e => { const r = e.target.closest('tr[data-k]'); if (r) { cd.key = r.dataset.k; cd.tag = r.dataset.t; drawCreate(); } });
+$('#cdImages').addEventListener('keydown', e => { const r = e.target.closest('tr[data-k]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); cd.key = r.dataset.k; cd.tag = r.dataset.t; drawCreate(); } });
+$('#cdRoot').onchange = drawCreateNote;
+$('#cdRefresh').onclick = async () => {
+  const st = $('#cdRefreshSt'); st.textContent = 'Asking Google...';
+  try {
+    let r = await api('/api/versions?refresh=1');
+    while (r.loading) { await new Promise(x => setTimeout(x, 1500)); r = await api('/api/versions'); }
+    V = r.items || V; st.textContent = r.result === 'ok' ? 'Up to date' : 'Couldn\'t reach Google';
+    drawCreate();
+  } catch (x) { st.textContent = x.message; }
+};
+$('#cdFinish').onclick = async () => {
+  const name = $('#cdName').value.trim();
+  if (!/^[A-Za-z0-9._-]+$/.test(name)) return note('Check the name', 'Names can use letters, numbers, dot, dash and underscore.', 'err');
+  if (!cd.key || !cd.tag || !cd.model) return note('Pick a device and a system image', '', 'err');
+  const root = $('#cdRoot').checked, m = root && M.length ? M[+$('#cdMagisk').value] : null;
+  try {
+    await api('/api/create', { name, key: cd.key, tag: cd.tag, device: cd.model, ram: +$('#cdRam').value, storage: +$('#cdSto').value, root, url: m?.url || '', version: m?.version || '' });
+    $('#createDlg').close(); sel = name; consoleOpen = true; note(`Creating ${name}`, 'Follow the progress in the console.'); refreshSoon();
+  } catch (x) { note('Couldn\'t create the device', x.message, 'err'); }
+};
+
+// © https://saadbinyousaf.dev/ © //
+let rootTarget = null, rootPick = null;
+async function openRoot() {
+  const a = cur(); if (!a) return; rootTarget = a.name;
+  $('#rdTitle').textContent = a.rooted ? 'Re-root with Magisk' : 'Root with Magisk';
+  $('#rdSub').textContent = `Choose the Magisk build for ${a.name}. Every device on the same Android image gets root too.`;
+  $('#rdList').innerHTML = '<tr><td colspan="3"><span class="spin" style="vertical-align:-2px;margin-right:8px"></span>Loading versions from GitHub...</td></tr>';
+  $('#rdGo').disabled = true;
+  $('#rootDlg').showModal();
+  if (!M.length) await loadMagisk();
+  rootPick = defaultMagisk() || null;
+  drawRoot();
+}
+function drawRoot() {
+  $('#rdList').innerHTML = M.length ? M.map((m, i) => `<tr class="${m === rootPick ? 'sel' : ''}" data-i="${i}" tabindex="0"><td class="mono">${esc(m.version)}${m === defaultMagisk() ? ' <span class="tag" style="margin-left:6px">Recommended</span>' : ''}</td><td>${esc(m.channel)}</td><td>${esc(m.date || '')}</td></tr>`).join('')
+    : '<tr><td colspan="3" style="color:var(--muted)">GitHub is unreachable. rootAVD will pick a version itself.</td></tr>';
+  $('#rdGo').disabled = false;
+  $('#rdGo').textContent = rootPick ? `Root with ${rootPick.version}` : 'Root';
+}
+$('#rdList').addEventListener('click', e => { const r = e.target.closest('tr[data-i]'); if (r) { rootPick = M[+r.dataset.i]; drawRoot(); } });
+$('#rdGo').onclick = async () => {
+  $('#rootDlg').close(); consoleOpen = true;
+  await act(() => api('/api/root', { name: rootTarget, url: rootPick?.url || '', version: rootPick?.version || '' }), `Rooting ${rootTarget}`);
+};
+
+// © https://saadbinyousaf.dev/ © //
+let askResolve = null;
+function ask(title, text, okLabel) {
+  $('#akTitle').textContent = title; $('#akText').textContent = text; $('#akYes').textContent = okLabel;
+  $('#askDlg').showModal(); $('#akNo').focus();
+  return new Promise(r => { askResolve = r; });
+}
+function closeAsk(v) { $('#askDlg').close(); if (askResolve) { askResolve(v); askResolve = null; } }
+$('#akNo').onclick = () => closeAsk(false);
+$('#akYes').onclick = () => closeAsk(true);
+$('#askDlg').addEventListener('cancel', () => closeAsk(false));
+async function openDelete() {
+  const a = cur(); if (!a) return;
+  if (!(await ask(`Delete ${a.name}?`, 'The device and everything on it are removed for good. The Android image stays, so other devices are not affected.', 'Delete'))) return;
+  await act(() => api('/api/delete', { name: a.name }), `Deleted ${a.name}`);
+}
+document.querySelectorAll('[data-close]').forEach(b => { b.innerHTML ||= ''; if (b.classList.contains('iconb')) b.innerHTML = ic('close', 14); b.onclick = () => b.closest('dialog').close(); });
+
+// © https://saadbinyousaf.dev/ © //
+const COMPONENTS = [['Java 21 (portable)', '190 MB'], ['Android SDK Command-line Tools', '150 MB'], ['Android Emulator', '350 MB'], ['Android SDK Platform-Tools', '10 MB']];
+let laterReboot = false, setupWasRunning = false;
+function renderWizard() {
+  const su = S.setup || { done: true, reboot: false };
+  const t = S.task && S.task.action === 'Setup' ? S.task : null;
+  const run = t && t.state === 'running', failed = t && t.state === 'failed';
+  if (setupWasRunning && t && t.state === 'done' && !su.reboot) { setupWasRunning = false; api('/api/dismiss', {}).catch(() => {}); setTimeout(() => { if (!S.avds.length) openCreate(); }, 500); }
+  if (run) setupWasRunning = true;
+  const show = !su.done || run || failed || (su.reboot && !laterReboot);
+  $('#wiz').hidden = !show;
+  if (!show) return;
+  if (once('wiz', [su, t && [t.state, t.current, t.message, t.dl && Math.round(t.dl.bytes / 1048576)], laterReboot])) {
+    const body = $('#wBody'), foot = $('#wFoot');
+    if (run || failed) {
+      const n = t.steps.length, pct = Math.round(t.current / n * 100);
+      body.innerHTML = `<h2>${failed ? 'Setup stopped' : 'Downloading Components'}</h2>
+        <p class="lead ${failed ? 'err' : t.message ? 'warn' : ''}">${esc(failed ? t.message : (dlText(t) ? 'Downloading ' + dlText(t) : t.message || (t.steps[t.current] || '') + '...'))}</p>
+        <div class="wprog"><span class="pbar ${t.dl && !failed ? 'ind' : ''}"><i style="width:${failed ? pct : Math.max(5, pct)}%"></i></span><small>Step ${Math.min(t.current + 1, n)} of ${n}</small></div>
+        <div class="log wlog" id="wLog"></div>`;
+      foot.innerHTML = failed ? '<span class="left">Anything already downloaded is kept.</span><button class="btn primary" data-w="retry">Retry</button>'
+        : '<span class="left">You can leave this window open and do something else.</span><button class="btn" data-w="cancel">Cancel</button>';
+    } else if (su.done && su.reboot) {
+      body.innerHTML = `<h2>Restart required</h2><p class="lead">Windows Hypervisor Platform is now turned on. Restart Windows once so the emulator can run at full speed.</p>`;
+      foot.innerHTML = '<span class="left">Save your work in other apps first.</span><button class="btn" data-w="later">Later</button><button class="btn primary" data-w="restart">Restart Windows</button>';
+    } else if (S.ready) {
+      body.innerHTML = `<h2>Finish setting up</h2>
+        <p class="lead">Your Android tools and devices are already here. Droidesk needs Windows Hypervisor Platform turned on again, which usually happens after reinstalling Windows. Nothing is downloaded.</p>
+        <p class="lead" style="margin-top:14px;font-size:12px">Windows asks for admin rights once and then needs a restart.</p>`;
+      foot.innerHTML = '<button class="btn primary" data-w="start">Continue</button>';
+    } else {
+      body.innerHTML = `<h2>Welcome</h2>
+        <p class="lead">Droidesk sets up Google's Android emulator and its tools inside its own folder. Nothing is installed anywhere else on your PC, and Android Studio isn't needed.</p>
+        <div class="box comp"><table><thead><tr><th>Component</th><th style="width:120px">Download size</th></tr></thead>
+        <tbody>${COMPONENTS.map(c => `<tr><td>${esc(c[0])}</td><td>${esc(c[1])}</td></tr>`).join('')}</tbody>
+        <tfoot><tr><td style="padding-left:14px">Total</td><td style="padding-left:10px">about 700 MB</td></tr></tfoot></table></div>
+        <p class="lead" style="margin-top:14px;font-size:12px">Windows may ask for admin rights once, to turn on Windows Hypervisor Platform.</p>`;
+      foot.innerHTML = '<span class="left" id="wFolder"></span><button class="btn primary" data-w="start">Install</button>';
+      const f = $('#wFolder'); if (f) f.textContent = S.root ? `Installs to ${S.root}\\data` : '';
+    }
+  }
+  const lg = $('#wLog'); if (lg && t) fillLog(lg, t.log, run);
+}
+$('#wFoot').addEventListener('click', async e => {
+  const b = e.target.closest('[data-w]'); if (!b) return;
+  const k = b.dataset.w;
+  if (k === 'later') { laterReboot = true; sigs.wiz = ''; return renderWizard(); }
+  if (k === 'restart') { if (await ask('Restart Windows now?', 'Windows restarts in 5 seconds. Save your work in other apps first.', 'Restart')) api('/api/restart', {}).catch(x => note('Something went wrong', x.message, 'err')); return; }
+  b.disabled = true;
+  try {
+    if (k === 'start') await api('/api/setup', {});
+    if (k === 'retry') await api('/api/retry', {});
+    if (k === 'cancel') await api('/api/cancel', {});
+  } catch (x) { note('Something went wrong', x.message, 'err'); b.disabled = false; }
+  sigs.wiz = ''; refreshSoon();
+});
+
+// © https://saadbinyousaf.dev/ © //
+if (!TOKEN) $('#offline').hidden = false; else poll();
+</script>
+</body>
+</html>
