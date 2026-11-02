@@ -1,0 +1,9 @@
+# // © https://saadbinyousaf.dev/ © //
+blank_issues_enabled: false
+contact_links:
+  - name: FAQ and troubleshooting
+    url: https://github.com/saadbinyousaf1/Droidesk/blob/main/docs/faq.md
+    about: Answers to the most common setup, device and root problems.
+  - name: Report a security problem
+    url: https://github.com/saadbinyousaf1/Droidesk/security/advisories/new
+    about: Please report security problems privately.

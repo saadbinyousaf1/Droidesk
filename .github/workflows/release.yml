@@ -1,0 +1,54 @@
+# // © https://saadbinyousaf.dev/ © //
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # // © https://saadbinyousaf.dev/ © //
+      - name: Check the version matches the tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          app=$(grep -oP "\\\$AppVersion\s*=\s*'\K[^']+" core/server.ps1)
+          echo "tag=$tag app=$app"
+          test "$tag" = "$app" || { echo "::error::Tag v$tag doesn't match \$AppVersion $app in core/server.ps1"; exit 1; }
+
+      # // © https://saadbinyousaf.dev/ © //
+      - name: Package
+        run: |
+          mkdir -p dist/Droidesk
+          cp -r Droidesk.bat core README.md LICENSE dist/Droidesk/
+          cd dist && zip -r -X "Droidesk-${GITHUB_REF_NAME}.zip" Droidesk
+
+      # // © https://saadbinyousaf.dev/ © //
+      - name: Release notes
+        run: |
+          awk -v v="## ${GITHUB_REF_NAME}" '
+            $0 == v { on = 1; next }
+            on && /^## v/ { exit }
+            on { print }
+          ' docs/changes.md > notes.md
+          {
+            echo ""
+            echo "---"
+            echo "**Install:** download \`Droidesk-${GITHUB_REF_NAME}.zip\`, right-click it, choose Properties and tick Unblock, extract it to a folder without spaces and open \`Droidesk.bat\`. See the [installation guide](https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/install.md)."
+          } >> notes.md
+          cat notes.md
+
+      # // © https://saadbinyousaf.dev/ © //
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Droidesk ${{ github.ref_name }}
+          body_path: notes.md
+          files: dist/Droidesk-${{ github.ref_name }}.zip

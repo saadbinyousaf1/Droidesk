@@ -1,0 +1,58 @@
+# // © https://saadbinyousaf.dev/ © //
+name: Bug report
+description: Something in Droidesk doesn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Check the [FAQ](https://github.com/saadbinyousaf1/Droidesk/blob/main/docs/faq.md) first, it covers the most common problems.
+  - type: input
+    id: version
+    attributes:
+      label: Droidesk version
+      description: Shown in the status bar, bottom right.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Run `winver` and copy the version and build.
+      placeholder: "Windows 11 24H2, build 26100.2314"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where did it happen?
+      options:
+        - Setup wizard
+        - Creating a device
+        - Rooting with Magisk
+        - Starting or stopping a device
+        - Updating the emulator
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Device and system image
+      placeholder: "Pixel 8, Android 15, Google Play"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Console log
+      description: Open **Console** at the bottom of the window and copy the whole log of the task.
+      render: text
+    validations:
+      required: true
