@@ -10,7 +10,7 @@
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,100..1000&family=Google+Sans+Code:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* // © https://saadbinyousaf.dev/ © // */
 :root{
@@ -19,12 +19,12 @@
   --text:#DFE1E5; --text2:#A8ADB5; --muted:#6F737A;
   --accent:#3574F0; --accent2:#4682FA; --focus:#3574F0;
   --green:#5FB865; --red:#DB5C5C; --yellow:#F2C55C; --droid:#3DDC84;
-  --sans:'Inter','Segoe UI Variable Text','Segoe UI',sans-serif;
-  --mono:'JetBrains Mono','Cascadia Mono',Consolas,monospace;
+  --sans:'Google Sans Flex','Google Sans','Segoe UI Variable Text','Segoe UI',sans-serif;
+  --mono:'Google Sans Code','Cascadia Mono',Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{background:var(--bg);color:var(--text);font:400 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;user-select:none}
+body{background:var(--bg);color:var(--text);font:400 13.5px/1.45 var(--sans);font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow:hidden;user-select:none}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0}
 button:disabled{cursor:default;opacity:.4}
@@ -342,7 +342,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
     <div class="dlgh"><h2 id="rdTitle">Root with Magisk</h2><button class="iconb" data-close aria-label="Close"></button></div>
     <div class="dlgb">
       <p id="rdSub" style="color:var(--text2);margin-bottom:12px"></p>
-      <div class="box"><div class="tablewrap" style="max-height:280px"><table class="imgt"><thead><tr><th>Magisk version</th><th>Channel</th><th>Released</th></tr></thead><tbody id="rdList"></tbody></table></div></div>
+      <div class="box"><div class="tablewrap" style="max-height:280px"><table class="imgt"><thead><tr><th style="width:22%">Version</th><th style="width:38%">Channel</th><th>Released</th><th style="width:80px">Size</th></tr></thead><tbody id="rdList"></tbody></table></div></div>
     </div>
     <div class="dlgf"><span class="note">Runs in the background. Progress shows in the console.</span><button class="btn" data-close>Cancel</button><button class="btn primary" id="rdGo">Root</button></div>
   </div>
@@ -730,7 +730,7 @@ function drawMagiskSel() {
   const s = $('#cdMagisk');
   if (!M.length) { s.innerHTML = '<option value="">rootAVD picks a version (GitHub unreachable)</option>'; return; }
   const d = defaultMagisk();
-  s.innerHTML = M.map((m, i) => `<option value="${i}" ${m === d ? 'selected' : ''}>Magisk ${esc(m.version)} (${esc(m.channel)})${m === d ? ', recommended' : ''}</option>`).join('');
+  s.innerHTML = M.map((m, i) => `<option value="${i}" ${m === d ? 'selected' : ''}>Magisk ${esc(m.version)} (${esc(m.channel)}${m.sizeMb ? ', ' + esc(m.sizeMb) + ' MB' : ''})${m === d ? ', recommended' : ''}</option>`).join('');
 }
 $('#cdModels').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) { cd.model = b.dataset.m; drawCreate(); } });
 $('#cdImages').addEventListener('click', e => { const r = e.target.closest('tr[data-k]'); if (r) { cd.key = r.dataset.k; cd.tag = r.dataset.t; drawCreate(); } });
@@ -762,7 +762,7 @@ async function openRoot() {
   const a = cur(); if (!a) return; rootTarget = a.name;
   $('#rdTitle').textContent = a.rooted ? 'Re-root with Magisk' : 'Root with Magisk';
   $('#rdSub').textContent = `Choose the Magisk build for ${a.name}. Every device on the same Android image gets root too.`;
-  $('#rdList').innerHTML = '<tr><td colspan="3"><span class="spin" style="vertical-align:-2px;margin-right:8px"></span>Loading versions from GitHub...</td></tr>';
+  $('#rdList').innerHTML = '<tr><td colspan="4"><span class="spin" style="vertical-align:-2px;margin-right:8px"></span>Loading versions from GitHub...</td></tr>';
   $('#rdGo').disabled = true;
   $('#rootDlg').showModal();
   if (!M.length) await loadMagisk();
@@ -770,8 +770,8 @@ async function openRoot() {
   drawRoot();
 }
 function drawRoot() {
-  $('#rdList').innerHTML = M.length ? M.map((m, i) => `<tr class="${m === rootPick ? 'sel' : ''}" data-i="${i}" tabindex="0"><td class="mono">${esc(m.version)}${m === defaultMagisk() ? ' <span class="tag" style="margin-left:6px">Recommended</span>' : ''}</td><td>${esc(m.channel)}</td><td>${esc(m.date || '')}</td></tr>`).join('')
-    : '<tr><td colspan="3" style="color:var(--muted)">GitHub is unreachable. rootAVD will pick a version itself.</td></tr>';
+  $('#rdList').innerHTML = M.length ? M.map((m, i) => `<tr class="${m === rootPick ? 'sel' : ''}" data-i="${i}" tabindex="0"><td class="mono">${esc(m.version)}</td><td>${esc(m.channel)}${m === defaultMagisk() ? ' <span class="tag" style="margin-left:6px">Recommended</span>' : ''}</td><td>${esc(m.date || '')}</td><td>${m.sizeMb ? esc(m.sizeMb) + ' MB' : ''}</td></tr>`).join('')
+    : '<tr><td colspan="4" style="color:var(--muted)">GitHub is unreachable. rootAVD will pick a version itself.</td></tr>';
   $('#rdGo').disabled = false;
   $('#rdGo').textContent = rootPick ? `Root with ${rootPick.version}` : 'Root';
 }

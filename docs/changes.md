@@ -1,6 +1,16 @@
 <!-- // © https://saadbinyousaf.dev/ © // -->
 # Changelog
 
+## v1.0.1
+
+### Root
+- Rooting now always downloads the release build of Magisk (about 11 MB). Before, it could pick the 35 MB debug build that ships alongside each Magisk release.
+- Canary builds are read from Magisk's current update feed again, and debug-only builds are skipped.
+- The Magisk picker shows each build's download size.
+
+### Look
+- The interface now uses Google Sans Flex, the typeface of Pixel phones and Android, with Google Sans Code in the console.
+
 ## v1.0.0
 
 The first public release.

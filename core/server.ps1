@@ -1,7 +1,7 @@
 ﻿# // © https://saadbinyousaf.dev/ © //
 $ErrorActionPreference = 'Continue'
 $AppName    = 'Droidesk'
-$AppVersion = '1.0.0'
+$AppVersion = '1.0.1'
 $SiteUrl    = 'https://saadbinyousaf.dev/'
 $RepoUrl    = 'https://github.com/saadbinyousaf1/Droidesk'
 $ProgressPreference = 'SilentlyContinue'
@@ -500,28 +500,37 @@ function Get-Devices {
 }
 
 # // © https://saadbinyousaf.dev/ © //
+function Select-MagiskApk($assets) {
+  $apks = @($assets | Where-Object { $_.name -like '*.apk' -and $_.name -notmatch 'debug' })
+  $pick = $apks | Where-Object { $_.name -match '^Magisk-v?[\d.]+.*\.apk$' } | Select-Object -First 1
+  if (-not $pick) { $pick = $apks | Where-Object { $_.name -match 'release' } | Select-Object -First 1 }
+  if (-not $pick) { $pick = $apks | Sort-Object size | Select-Object -First 1 }
+  $pick
+}
+
 function Get-MagiskList([bool]$force) {
   if (-not $force -and $script:MagiskCache -and ((Get-Date) - $script:MagiskAt).TotalMinutes -lt 15) { return ,$script:MagiskCache }
   $items = @()
-  $hdr = @{ 'User-Agent' = 'AndroidVault' }
-  try {
-    $c = Invoke-RestMethod 'https://raw.githubusercontent.com/topjohnwu/magisk-files/canary/canary.json' -Headers $hdr -TimeoutSec 10
-    if ($c.magisk.link) {
-      $items += @{ version = "$($c.magisk.version)"; channel = 'Canary'; date = ''; url = "$($c.magisk.link)"; code = "$($c.magisk.versionCode)" }
-    }
-  } catch {}
+  $hdr = @{ 'User-Agent' = 'Droidesk' }
   try {
     $rels = Invoke-RestMethod 'https://api.github.com/repos/topjohnwu/Magisk/releases?per_page=15' -Headers $hdr -TimeoutSec 10
     foreach ($r in $rels) {
-      $apk = $r.assets | Where-Object { $_.name -like '*.apk' } | Select-Object -First 1
+      $apk = Select-MagiskApk $r.assets
       if (-not $apk) { continue }
       $items += @{
         version = ("$($r.tag_name)" -replace '^v', '')
         channel = $(if ($r.prerelease) { 'Beta' } else { 'Stable' })
         date    = "$($r.published_at)".Substring(0, [math]::Min(10, "$($r.published_at)".Length))
         url     = "$($apk.browser_download_url)"
-        code    = ''
+        sizeMb  = [math]::Round([double]$apk.size / 1MB, 1)
       }
+    }
+  } catch {}
+  try {
+    $c = Invoke-RestMethod 'https://raw.githubusercontent.com/topjohnwu/magisk-files/master/canary.json' -Headers $hdr -TimeoutSec 10
+    $link = "$($c.magisk.link)"
+    if ($link -and $link -notmatch 'debug' -and -not ($items | Where-Object { $_.url -eq $link })) {
+      $items = @(@{ version = "$($c.magisk.version)"; channel = 'Canary'; date = ''; url = $link; sizeMb = $null }) + $items
     }
   } catch {}
   if ($items.Count) { $script:MagiskCache = $items; $script:MagiskAt = Get-Date }
